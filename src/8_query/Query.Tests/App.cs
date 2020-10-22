@@ -13,11 +13,16 @@ namespace Query.Tests
         public void Given(params IEvent[] events) => history.AddRange(events);
 
         public Task<T> QueryAsync<T>(IQuery<T> q) where T : class
-            => q switch
-            {
-                GameQuery query => Task.FromResult<T>(history.Rehydrate<GamesView>().Games.Single(x => x.Key == query.GameId.ToString()).Value as T),
-                _ => Task.FromResult(default(T))
-                };
+        => q switch
+        {
+            GameQuery query => Task.FromResult<T>(
+                history
+                .Rehydrate<GamesView>()
+                .Games
+                .Single(x => x.Key == query.GameId.ToString())
+                .Value as T),
+            _ => Task.FromResult(default(T))
+        };
     }
 
     public interface IEvent
